@@ -58,6 +58,16 @@ export class Gulpfile {
     }
 
     /**
+     * Copies all source files to a folder in the package, replacing all the typeorm imports.
+     */
+    @Task()
+    packageBrowserFiles() {
+        return gulp.src("./build/compiled/src/**/*")
+            .pipe(replace(/require\(\"typeorm\"\)/g, "require(\"typeorm/browser\")"))
+            .pipe(gulp.dest("./build/package/browser"));
+    }
+
+    /**
      * Change the "private" state of the packaged package.json file to public.
      */
     @Task()
@@ -95,7 +105,7 @@ export class Gulpfile {
         return [
             "clean",
             "compile",
-            ["packageFiles", "packagePreparePackageFile", "packageReadmeFile", "copyTypingsFile"]
+            ["packageFiles", "packageBrowserFiles", "packagePreparePackageFile", "packageReadmeFile", "copyTypingsFile"]
         ];
     }
 
